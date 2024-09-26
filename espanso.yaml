@@ -63,6 +63,11 @@ matches:
           )
       )
 
+  - trigger: ":jsonarrayget"
+    force_clipboard: true
+    replace: >-
+      JSONGetElement( $array ; "[" & $counter & "]" )
+      
   - trigger: ":jsonget"
     replace: JSONGetElement( $parameter ; "" )
 
@@ -140,11 +145,6 @@ matches:
       valuecount(
           jsonlistkeys( $array ; “” )
       )
-
-  - trigger: ":jsongetarray"
-    force_clipboard: true
-    replace: >-
-      JSONGetElement( $array ; "[" & $counter & "]" )
 
   - trigger: ":leterror"
     force_clipboard: true
