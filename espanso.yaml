@@ -1,0 +1,193 @@
+# espanso match file
+
+# For a complete introduction, visit the official docs at: https://espanso.org/docs/
+
+# You can use this file to define the base matches (aka snippets)
+# that will be available in every application when using espanso.
+
+# Matches are substitution rules: when you type the "trigger" string
+# it gets replaced by the "replace" string.
+matches:
+  # Simple text replacement
+
+  # NOTE: espanso uses YAML to define matches, so pay attention to the indentation!
+
+  # But matches can also be dynamic:
+
+  # Print the current date
+  - trigger: ":date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%m/%d/%Y"
+
+  # Print the output of a shell command
+  - trigger: ":shell"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "echo 'Hello from your shell'"
+
+  # And much more! For more information, visit the docs: https://espanso.org/docs/
+
+  # Custom config
+  - trigger: ":exitloop"
+    force_clipboard: true
+    replace: >-
+      Let(
+          //zero based index
+          $counter = If(
+              IsEmpty( $counter ) ;
+              0 ;
+              $counter + 1
+          );
+
+          $counter >= $count_total
+      )
+
+  - trigger: ":filterlist"
+    force_clipboard: true
+    replace: >-
+      not IsEmpty (
+          FilterValues (
+              List (
+                  "" ;
+                  "" ;
+                  ""
+              ) ;
+              $value_to_check
+          )
+      )
+
+  - trigger: ":jsonget"
+    replace: JSONGetElement( $parameter ; "" )
+
+  - trigger: ":jsonindex"
+    force_clipboard: true
+    replace: >-
+      Let(
+          [
+              ~json = $replace_with_variable_containing_json ;
+
+              ~json_keys = JSONListKeys( ~json ; "" ) ;
+              ~index = If(
+                  Left( ~json_keys ; 3 ) = “? *”;
+                  0 ;
+                  ValueCount( ~json_keys )
+              );
+              ~path_prefix = “[” & ~index & “].”
+          ] ;
+          JSONSetElement(
+              ~json ;
+              [ ~path_prefix & “replace_with_key” ; $replace_with_value ; JSONString ]
+          )
+      )
+
+  - trigger: ":jsonlet"
+    force_clipboard: true
+    replace: >-
+      Let(
+          ~json = JSONGetElement( $parameter ; "" ) ;
+          If(
+              Left( ~json ; 3 ) = "? *" or ~json = "{}" or ~json = "[]" or isEmpty(~json) ;
+              "" ;
+              ~json
+          )
+      )
+
+  - trigger: ":jsonobjectarray"
+    force_clipboard: true
+    replace: >-
+      Let(
+          ~array = JSONGetElement ( $ ; "" ) ;
+          Case(
+              Left( ~array ; 3 ) = "? *" or IsEmpty( ~array ) ;
+                  "[]" ;
+
+              Left ( ~array ; 1 ) = "{" ;
+                  JSONSetElement(
+                      "[]" ;
+                      [ "[0]" ; ~array ; JSONObject ]
+                  );
+
+              ~array
+          )
+      )
+
+  - trigger: ":jsonresult"
+    force_clipboard: true
+    replace: >-
+      JSONGetElement( 
+          get(scriptresult) ; 
+          "" 
+      ) 
+
+  - trigger: ":jsonset"
+    force_clipboard: true
+    replace: >-
+      JSONSetElement(
+          $ ;
+          [ "" ; $ ; JSONString ]
+      )
+
+  - trigger: ":jsonvalue"
+    force_clipboard: true
+    replace: >-
+      valuecount(
+          jsonlistkeys( $array ; “” )
+      )
+
+  - trigger: ":jsongetarray"
+    force_clipboard: true
+    replace: >-
+      JSONGetElement( $array ; "[" & $counter & "]" )
+
+  - trigger: ":leterror"
+    force_clipboard: true
+    replace: >-
+      Let(
+          [
+              $error_detail = Get( LastErrorDetail ) ;
+              $error_location = Get ( LastErrorLocation ) 
+          ];
+          Get( LastError )
+      )
+
+  - trigger: ":letlet"
+    force_clipboard: true
+    replace: >-
+      Let(
+          [
+              ~variable = "" ;
+              ~result = ""
+          ] ;
+
+          ~result
+      )
+
+  - trigger: ":letsql"
+    force_clipboard: true
+    replace: >-
+      Let(
+          [
+              ~sql_statement_setup = 
+      "SELECT <<select>>
+      FROM <<from>>
+      WHERE <<where>> = ?" ;
+
+              ~sql_statement_substitute = Substitute
+              (
+                  ~sql_statement_setup ;
+                 [ "<<select>>" ; GetFieldReference( field_reference ; "field" ; 1 ) ] ;
+                 [ "<<from>>" ; GetFieldReference( field_reference ; "TO" ; 1 ) ] ;
+                 [ "<<where>>" ; GetFieldReference( field_reference ; "field" ; 1 ) ]
+              )
+          ] ;
+
+          ExecuteSQL( ~sql_statement_substitute ; "" ; "" ; $value_to_match )
+
+      )
