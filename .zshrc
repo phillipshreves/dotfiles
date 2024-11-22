@@ -8,7 +8,8 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="random"
+#ZSH_THEME="random"
+ZSH_THEME="jonathan"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -73,6 +74,7 @@ HIST_STAMPS="yyyy-mm-dd"
 plugins=(
 	git
 	zsh-autosuggestions
+	asdf
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -129,3 +131,7 @@ export NVM_DIR=“$HOME/.nvm”
 
 # Specify GraphViz dot file location for M1
 export GRAPHVIZ_DOT=/opt/homebrew/bin/dot
+
+# use podman instead of docker
+alias docker=podman
+
