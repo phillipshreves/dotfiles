@@ -135,3 +135,14 @@ export GRAPHVIZ_DOT=/opt/homebrew/bin/dot
 # use podman instead of docker
 alias docker=podman
 
+# podman compose up and down
+pcdu() {
+	f=${1}
+	podman compose -f $f down && podman compose -f $f up --build
+}
+pcd() {
+	f=${1}
+	podman compose -f $f down
+}
+
+
