@@ -112,7 +112,7 @@ export ARCHFLAGS="-arch arm64"
 # Example aliases
 # alias zshconfig=“mate ~/.zshrc”
 # alias ohmyzsh=“mate ~/.oh-my-zsh”
-alias lsls=‘ls -laAGhvFh’
+alias lsls="ls -laAGhvFh"
 
 # Set command line to vi keybinding
 bindkey -v
