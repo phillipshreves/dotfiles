@@ -149,3 +149,6 @@ pcd() {
 # z https://github.com/rupa/z
 . ~/z.sh
 
+
+# homebrew installed ccache pathing for caching compilation
+export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"
