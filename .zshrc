@@ -152,3 +152,5 @@ pcd() {
 
 # homebrew installed ccache pathing for caching compilation
 export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"
+# this alias allows for easier terminal setup(env variables) for esp-idf setup
+alias get_esp_idf='. $HOME/phil/esp/esp-idf/export.sh'
