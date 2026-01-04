@@ -1,6 +1,3 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -8,7 +5,6 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-#ZSH_THEME="random"
 ZSH_THEME="jonathan"
 
 # Set list of themes to pick from when loading at random
@@ -26,11 +22,11 @@ HYPHEN_INSENSITIVE="true"
 
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
+zstyle ':omz:update' mode auto      # update automatically without asking
 # zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
+zstyle ':omz:update' frequency 1
 
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS="true"
@@ -48,7 +44,7 @@ ENABLE_CORRECTION="true"
 # You can also set it to another string to have that shown instead of the default red dots.
 # e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 # Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -79,40 +75,26 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+
+####################
 # User configuration
+####################
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
+# Preferred language environment
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-   export EDITOR='nvim'
+   export EDITOR='vim'
 else
    export EDITOR='nvim'
 fi
 
-# Compilation flags
-export ARCHFLAGS="-arch arm64"
+# like ls -la but better
+alias lsls='ls -laAGhvFh'
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-# Example aliases
-# alias zshconfig=“mate ~/.zshrc”
-# alias ohmyzsh=“mate ~/.oh-my-zsh”
-alias lsls="ls -laAGhvFh"
+# quick neovim alias
+alias v='nvim'
 
 # Set command line to vi keybinding
 bindkey -v
@@ -120,20 +102,6 @@ bindkey -v
 # try to turn off autocorrection
 setopt nocorrectall
 setopt correct
-
-# enable shell integration
-test -e “${HOME}/.iterm2_shell_integration.zsh” && source “${HOME}/.iterm2_shell_integration.zsh”
-
-# NVM
-export NVM_DIR=“$HOME/.nvm”
-[ -s “$NVM_DIR/nvm.sh” ] && \. “$NVM_DIR/nvm.sh”  # This loads nvm
-[ -s “$NVM_DIR/bash_completion” ] && \. “$NVM_DIR/bash_completion”  # This loads nvm bash_completion
-
-# Specify GraphViz dot file location for M1
-export GRAPHVIZ_DOT=/opt/homebrew/bin/dot
-
-# use podman instead of docker
-alias docker=podman
 
 # podman compose up and down
 pcdu() {
@@ -146,11 +114,38 @@ pcd() {
 }
 
 
-# z https://github.com/rupa/z
+
+##########################################
+# ! MACHINE SPECIFIC CONFIGURATION BELOW !
+##########################################
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# Compilation flags
+export ARCHFLAGS="-arch arm64"
+
+# enable shell integration
+test -e “${HOME}/.iterm2_shell_integration.zsh” && source “${HOME}/.iterm2_shell_integration.zsh”
+
+# NVM
+export NVM_DIR=“$HOME/.nvm”
+[ -s “$NVM_DIR/nvm.sh” ] && \. “$NVM_DIR/nvm.sh”  # This loads nvm
+[ -s “$NVM_DIR/bash_completion” ] && \. “$NVM_DIR/bash_completion”  # This loads nvm bash_completion
+
+# asdf
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
+# go pathing for golang installed via homebrew
+export PATH="$PATH:$(go env GOPATH)/bin"
+
+# homebrew installed ccache pathing for clangd caching compilation
+export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"
+
+# homebrew installed llvm pathing to prioritize clang/clang++ over apple clang
+export PATH="/opt/homebrew/opt/llvm/bin:$PATH"
+
+# z is a better cd, by using fuzzy finding https://github.com/rupa/z
 . ~/z.sh
 
-
-# homebrew installed ccache pathing for caching compilation
-export PATH="/opt/homebrew/opt/ccache/libexec:$PATH"
 # this alias allows for easier terminal setup(env variables) for esp-idf setup
 alias get_esp_idf='. $HOME/phil/esp/esp-idf/export.sh'
